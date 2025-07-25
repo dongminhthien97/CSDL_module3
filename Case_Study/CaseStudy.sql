@@ -107,7 +107,7 @@ CREATE TABLE hop_dong_chi_tiet (
     FOREIGN KEY (ma_dich_vu_di_kem) REFERENCES dich_vu_di_kem(ma_dich_vu_di_kem)
 );
 
--- Thêm mới thông tin cho tất cả các bảng có trong CSDL để có thể thoả mãn các yêu cầu bên dưới.
+-- 1.Thêm mới thông tin cho tất cả các bảng có trong CSDL để có thể thoả mãn các yêu cầu bên dưới.
 INSERT INTO vi_tri (ma_vi_tri, ten_vi_tri) VALUES
 (1, 'Quản Lý'),
 (2, 'Nhân Viên');
@@ -236,6 +236,14 @@ INSERT INTO hop_dong_chi_tiet (
 (6, 1, 1, 3),
 (7, 2, 1, 2),
 (8, 2, 12, 2);
+
+-- 2.Hiển thị thông tin của tất cả nhân viên có trong hệ thống có tên bắt đầu là một trong các ký tự “H”, “T” hoặc “K” và có tối đa 15 kí tự.
+
+SELECT *
+FROM nhan_vien
+WHERE (ho_ten LIKE 'H%' OR ho_ten LIKE 'T%' OR ho_ten LIKE 'K%')
+  AND LENGTH(ho_ten) <= 15;
+
 
 
 
