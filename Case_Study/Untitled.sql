@@ -141,6 +141,7 @@ INSERT INTO loai_khach VALUES
 (3, 'Gold'),
 (4, 'Silver'),
 (5, 'Member');
+DROP TABLE IF EXISTS vi_tri;
 
 INSERT INTO khach_hang VALUES
 (1, 1, 'Nguyễn Văn Minh', '1985-01-15', 1, '123456789', '0911000001', 'a.nguyen@gmail.com', 'Hà Nội'),
@@ -187,6 +188,10 @@ SELECT * FROM dich_vu;
 SELECT * FROM hop_dong;
 SELECT * FROM trinh_do;
 
+SELECT *
+FROM nhan_vien
+WHERE (ho_ten LIKE 'H%' OR ho_ten LIKE 'T%' OR ho_ten LIKE 'K%')
+  AND LENGTH(ho_ten) <= 15;
 
 
 
