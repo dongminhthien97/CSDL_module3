@@ -337,8 +337,23 @@ WHERE dv.ma_dich_vu IN (
       );
       
 -- 8. Hiển thị thông tin ho_ten khách hàng có trong hệ thống, với yêu cầu ho_ten không trùng nhau.
+-- C1: Dung DISTINCT
 SELECT DISTINCT ho_ten
 FROM khach_hang;
+
+-- C2: Dung GROUP BY
+SELECT ho_ten
+FROM khach_hang
+GROUP BY ho_ten;
+
+-- C3: Dung UNION
+SELECT ho_ten
+FROM khach_hang
+UNION
+SELECT ho_ten
+FROM khach_hang;
+
+-- 9.
   
 
 
