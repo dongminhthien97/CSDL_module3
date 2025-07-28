@@ -302,6 +302,21 @@ GROUP BY
     hd.ngay_lam_hop_dong, hd.ngay_ket_thuc, dv.chi_phi_thue
 ORDER BY 
     kh.ma_khach_hang, hd.ma_hop_dong;
+    
+-- 6.Hiển thị ma_dich_vu, ten_dich_vu, dien_tich, chi_phi_thue, ten_loai_dich_vu của tất cả các loại dịch vụ chưa từng được khách hàng thực hiện đặt từ quý 1 của năm 2021 (Quý 1 là tháng 1, 2, 3).
+SELECT	dv.ma_dich_vu,
+		dv.ten_dich_vu,
+        dv.dien_tich,
+        dv.chi_phi_thue,
+        ldv.ten_loai_dich_vu
+FROM	dich_vu dv
+JOIN	loai_dich_vu ldv ON ldv.ma_loai_dich_vu = dv.ma_loai_dich_vu
+LEFT JOIN 	hop_dong hd
+		ON 	dv.ma_dich_vu = hd.ma_hop_dong
+        AND hd.ngay_lam_hop_dong BETWEEN "2021-01-01" AND "2021-03-01"
+WHERE	hd.ma_hop_dong IS NULL;
+    
+
 
 
 
