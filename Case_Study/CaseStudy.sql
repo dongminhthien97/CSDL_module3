@@ -316,7 +316,33 @@ LEFT JOIN 	hop_dong hd
         AND hd.ngay_lam_hop_dong BETWEEN "2021-01-01" AND "2021-03-01"
 WHERE	hd.ma_hop_dong IS NULL;
     
+-- 7. Hiển thị thông tin ma_dich_vu, ten_dich_vu, dien_tich, so_nguoi_toi_da, chi_phi_thue, ten_loai_dich_vu của tất cả các loại dịch vụ đã từng được khách hàng đặt phòng trong năm 2020 nhưng chưa từng được khách hàng đặt phòng trong năm 2021.
+SELECT dv.ma_dich_vu, 
+       dv.ten_dich_vu, 
+       dv.dien_tich, 
+       dv.so_nguoi_toi_da, 
+       dv.chi_phi_thue, 
+       ldv.ten_loai_dich_vu
+FROM dich_vu dv
+JOIN loai_dich_vu ldv ON dv.ma_loai_dich_vu = ldv.ma_loai_dich_vu
+WHERE dv.ma_dich_vu IN (
+          SELECT ma_dich_vu 
+          FROM hop_dong 
+          WHERE YEAR(ngay_lam_hop_dong) = 2020
+      )
+  AND dv.ma_dich_vu NOT IN (
+          SELECT ma_dich_vu 
+          FROM hop_dong 
+          WHERE YEAR(ngay_lam_hop_dong) = 2021
+      );
+      
+-- 8. Hiển thị thông tin ho_ten khách hàng có trong hệ thống, với yêu cầu ho_ten không trùng nhau.
+SELECT DISTINCT ho_ten
+FROM khach_hang;
+  
 
+
+        
 
 
 
