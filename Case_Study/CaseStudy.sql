@@ -376,6 +376,42 @@ GROUP BY hd.ma_hop_dong,
 		hd.ngay_ket_thuc,
         hd.tien_dat_coc
 ORDER BY hd.ma_hop_dong;
+
+-- 11. Hiển thị thông tin các dịch vụ đi kèm đã được sử dụng bởi những khách hàng có ten_loai_khach là “Diamond” và có dia_chi ở “Vinh” hoặc “Quảng Ngãi”.
+SELECT DISTINCT dvdk.ma_dich_vu_di_kem,
+       dvdk.ten_dich_vu_di_kem,
+       dvdk.don_vi,
+       dvdk.gia
+FROM khach_hang kh
+JOIN loai_khach lk 
+     ON kh.ma_loai_khach = lk.ma_loai_khach
+JOIN hop_dong hd 
+     ON kh.ma_khach_hang = hd.ma_khach_hang
+JOIN hop_dong_chi_tiet hdct 
+     ON hd.ma_hop_dong = hdct.ma_hop_dong
+JOIN dich_vu_di_kem dvdk 
+     ON hdct.ma_dich_vu_di_kem = dvdk.ma_dich_vu_di_kem
+WHERE lk.ten_loai_khach = 'Diamond'
+  AND (kh.dia_chi LIKE '%Vinh%' OR kh.dia_chi LIKE '%Quảng Ngãi%');
+
+-- 12. Hiển thị thông tin các Dịch vụ đi kèm được sử dụng nhiều nhất bởi các Khách hàng đã đặt phòng. (Lưu ý là có thể có nhiều dịch vụ có số lần sử dụng nhiều như nhau).
+SELECT dvdk.ma_dich_vu_di_kem,
+       dvdk.ten_dich_vu_di_kem,
+       SUM(hdct.so_luong) AS tong_so_luong
+FROM hop_dong_chi_tiet hdct
+JOIN dich_vu_di_kem dvdk 
+     ON hdct.ma_dich_vu_di_kem = dvdk.ma_dich_vu_di_kem
+JOIN hop_dong hd 
+     ON hdct.ma_hop_dong = hd.ma_hop_dong
+GROUP BY dvdk.ma_dich_vu_di_kem, dvdk.ten_dich_vu_di_kem
+HAVING SUM(hdct.so_luong) >= ALL (
+       SELECT SUM(hdct2.so_luong)
+       FROM hop_dong_chi_tiet hdct2
+       JOIN hop_dong hd2 ON hdct2.ma_hop_dong = hd2.ma_hop_dong
+       GROUP BY hdct2.ma_dich_vu_di_kem
+)
+ORDER BY tong_so_luong DESC;
+
 		
 
         
