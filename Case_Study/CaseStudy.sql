@@ -353,7 +353,33 @@ UNION
 SELECT ho_ten
 FROM khach_hang;
 
--- 9.
+-- 9.Thực hiện thống kê doanh thu theo tháng, nghĩa là tương ứng với mỗi tháng trong năm 2021 thì sẽ có bao nhiêu khách hàng thực hiện đặt phòng.
+SELECT 
+    MONTH(hd.ngay_lam_hop_dong) AS thang,
+    COUNT(DISTINCT hd.ma_khach_hang) AS so_khach_hang
+FROM hop_dong hd
+WHERE YEAR(hd.ngay_lam_hop_dong) = 2021
+GROUP BY MONTH(hd.ngay_lam_hop_dong)
+ORDER BY thang;
+
+-- 10. Hiển thị thông tin tương ứng với từng hợp đồng thì đã sử dụng bao nhiêu dịch vụ đi kèm. Kết quả hiển thị bao gồm ma_hop_dong, ngay_lam_hop_dong, ngay_ket_thuc, tien_dat_coc, so_luong_dich_vu_di_kem (được tính dựa trên việc sum so_luong ở dich_vu_di_kem).
+SELECT 	hd.ma_hop_dong,
+		hd.ngay_lam_hop_dong,
+		hd.ngay_ket_thuc,
+        hd.tien_dat_coc,
+        SUM(hdct.so_luong) AS so_luong_dich_vu_di_kem
+FROM 	hop_dong hd
+LEFT JOIN hop_dong_chi_tiet hdct
+ON		hd.ma_hop_dong = hdct.ma_hop_dong
+GROUP BY hd.ma_hop_dong,
+		hd.ngay_lam_hop_dong,
+		hd.ngay_ket_thuc,
+        hd.tien_dat_coc
+ORDER BY hd.ma_hop_dong;
+		
+
+        
+
   
 
 
