@@ -393,8 +393,12 @@ JOIN dich_vu_di_kem dvdk
      ON hdct.ma_dich_vu_di_kem = dvdk.ma_dich_vu_di_kem
 WHERE lk.ten_loai_khach = 'Diamond'
   AND (kh.dia_chi LIKE '%Vinh%' OR kh.dia_chi LIKE '%Quảng Ngãi%');
+  
+  
+-- 12. Hiển thị thông tin ma_hop_dong, ho_ten (nhân viên), ho_ten (khách hàng), so_dien_thoai (khách hàng), ten_dich_vu, so_luong_dich_vu_di_kem (được tính dựa trên việc sum so_luong ở dich_vu_di_kem), tien_dat_coc của tất cả các dịch vụ đã từng được khách hàng đặt vào 3 tháng cuối năm 2020 nhưng chưa từng được khách hàng đặt vào 6 tháng đầu năm 2021.
 
--- 12. Hiển thị thông tin các Dịch vụ đi kèm được sử dụng nhiều nhất bởi các Khách hàng đã đặt phòng. (Lưu ý là có thể có nhiều dịch vụ có số lần sử dụng nhiều như nhau).
+
+-- 13. Hiển thị thông tin các Dịch vụ đi kèm được sử dụng nhiều nhất bởi các Khách hàng đã đặt phòng. (Lưu ý là có thể có nhiều dịch vụ có số lần sử dụng nhiều như nhau).
 SELECT dvdk.ma_dich_vu_di_kem,
        dvdk.ten_dich_vu_di_kem,
        SUM(hdct.so_luong) AS tong_so_luong
@@ -411,6 +415,7 @@ HAVING SUM(hdct.so_luong) >= ALL (
        GROUP BY hdct2.ma_dich_vu_di_kem
 )
 ORDER BY tong_so_luong DESC;
+
 
 		
 
