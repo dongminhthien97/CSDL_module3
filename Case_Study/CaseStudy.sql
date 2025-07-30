@@ -396,6 +396,38 @@ WHERE lk.ten_loai_khach = 'Diamond'
   
   
 -- 12. Hiển thị thông tin ma_hop_dong, ho_ten (nhân viên), ho_ten (khách hàng), so_dien_thoai (khách hàng), ten_dich_vu, so_luong_dich_vu_di_kem (được tính dựa trên việc sum so_luong ở dich_vu_di_kem), tien_dat_coc của tất cả các dịch vụ đã từng được khách hàng đặt vào 3 tháng cuối năm 2020 nhưng chưa từng được khách hàng đặt vào 6 tháng đầu năm 2021.
+WITH HopDongCuoi2020 AS (
+    SELECT hd.ma_hop_dong,
+           hd.ma_nhan_vien,
+           hd.ma_khach_hang,
+           hd.ma_dich_vu,
+           hd.ngay_lam_hop_dong,
+           hd.ngay_ket_thuc,
+           hd.tien_dat_coc,
+           COALESCE(SUM(hdct.so_luong), 0) AS so_luong_dich_vu_di_kem
+    FROM hop_dong hd
+    LEFT JOIN hop_dong_chi_tiet hdct 
+           ON hd.ma_hop_dong = hdct.ma_hop_dong
+    WHERE hd.ngay_lam_hop_dong BETWEEN '2020-10-01' AND '2020-12-31'
+    GROUP BY hd.ma_hop_dong, hd.ma_nhan_vien, hd.ma_khach_hang,
+             hd.ma_dich_vu, hd.ngay_lam_hop_dong, hd.ngay_ket_thuc, hd.tien_dat_coc
+)
+SELECT hdc2020.ma_hop_dong,
+       nv.ho_ten AS ho_ten_nhan_vien,
+       kh.ho_ten AS ho_ten_khach_hang,
+       kh.so_dien_thoai,
+       dv.ten_dich_vu,
+       hdc2020.so_luong_dich_vu_di_kem,
+       hdc2020.tien_dat_coc
+FROM HopDongCuoi2020 hdc2020
+JOIN nhan_vien nv ON hdc2020.ma_nhan_vien = nv.ma_nhan_vien
+JOIN khach_hang kh ON hdc2020.ma_khach_hang = kh.ma_khach_hang
+JOIN dich_vu dv ON hdc2020.ma_dich_vu = dv.ma_dich_vu
+WHERE hdc2020.ma_dich_vu NOT IN (
+          SELECT DISTINCT hd.ma_dich_vu
+          FROM hop_dong hd
+          WHERE hd.ngay_lam_hop_dong BETWEEN '2021-01-01' AND '2021-06-30'
+);
 
 
 -- 13. Hiển thị thông tin các Dịch vụ đi kèm được sử dụng nhiều nhất bởi các Khách hàng đã đặt phòng. (Lưu ý là có thể có nhiều dịch vụ có số lần sử dụng nhiều như nhau).
